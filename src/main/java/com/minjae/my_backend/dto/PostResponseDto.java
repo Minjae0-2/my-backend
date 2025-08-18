@@ -4,6 +4,7 @@ import com.minjae.my_backend.domain.Post;
 import lombok.Getter;
 import java.time.LocalDateTime;
 
+//Getter 쓰는 이유는 Jackson 때문에 (자바 객체 <-> JSON // 자바 객체의 private 볼수 없으므로 내부적으로 get메소드 사용)
 @Getter
 public class PostResponseDto {
     private final Long id;
