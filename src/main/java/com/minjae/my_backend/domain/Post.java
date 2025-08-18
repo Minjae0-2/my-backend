@@ -3,6 +3,7 @@ package com.minjae.my_backend.domain;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -10,6 +11,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
 @NoArgsConstructor(access= AccessLevel.PROTECTED) //Protected인 이유는 JPA가 이 객체를 상속하는 proxy 객체를 생성하기 때문 (lazy loading)
 public class Post {
     @Id //primary key
