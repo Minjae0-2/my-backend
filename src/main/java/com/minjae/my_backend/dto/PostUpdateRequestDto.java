@@ -4,10 +4,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter // Service에서 DTO내용 읽으려고 사용 (DB에 저장하기 위해)
-@Setter // Jackson이 JSON 객체 자바 객체로
+@Getter
+@Setter
 @NoArgsConstructor
-public class PostCreateRequestDto {
+public class PostUpdateRequestDto {
     private String title;
     private String content;
 }
