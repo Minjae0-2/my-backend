@@ -4,6 +4,7 @@ import com.minjae.my_backend.domain.Post;
 import com.minjae.my_backend.domain.PostRepository;
 import com.minjae.my_backend.dto.PostCreateRequestDto;
 import com.minjae.my_backend.dto.PostResponseDto;
+import com.minjae.my_backend.dto.PostUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,5 +37,22 @@ public class PostService {
         Post postEntity = postRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
         return PostResponseDto.from(postEntity);
+    }
+
+    //게시물 업데이트
+    @Transactional
+    public Long update(Long id, PostUpdateRequestDto requestDto){
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
+        post.update(requestDto.getTitle(), requestDto.getContent());
+        return id;
+    }
+
+    //게시물 삭제
+    @Transactional
+    public void delete(Long id){
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
+        postRepository.delete(post);
     }
 }
