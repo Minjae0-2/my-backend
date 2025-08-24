@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor //final 필드에 대한 생성자 생성
 public class PostService {
@@ -31,7 +34,16 @@ public class PostService {
         return savedPost.getId();
     }
 
-    //게시물 조회
+    //게시물 여러개 조회
+    @Transactional(readOnly = true)
+    public List<PostResponseDto> findAll(){
+        List<Post> postList = postRepository.findAll();
+        return postList.stream()
+                .map(PostResponseDto::from)
+                .collect(Collectors.toList());
+    }
+
+    //게시물 1개 조회
     @Transactional(readOnly = true)
     public PostResponseDto findById(Long id){
         Post postEntity = postRepository.findById(id)
