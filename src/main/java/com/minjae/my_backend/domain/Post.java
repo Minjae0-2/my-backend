@@ -11,9 +11,9 @@ import org.springframework.data.annotation.LastModifiedDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Getter
+@Getter //PostResponseDto에서 사용. Post entity에서 데이터 읽어서 DTO로 변환 위해
 @NoArgsConstructor(access= AccessLevel.PROTECTED) //Protected인 이유는 JPA가 이 객체를 상속하는 proxy 객체를 생성하기 때문 (lazy loading)
-public class Post {
+public class Post extends BaseTimeEntity{
     @Id //primary key
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,13 +27,6 @@ public class Post {
     private String content;
 
     private String author;
-
-    @CreatedDate
-    @Column(updatable = false)
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    private LocalDateTime modifiedAt;
 
     //Service에서 프론트에서 데이터 받아오면 DB에 저장하기 위해
     //객체 생성할때 무조건 Builder 이용해서 생성해야함
