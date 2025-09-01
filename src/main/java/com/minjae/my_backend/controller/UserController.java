@@ -1,5 +1,6 @@
 package com.minjae.my_backend.controller;
 
+import com.minjae.my_backend.dto.UserLoginRequestDto;
 import com.minjae.my_backend.dto.UserSignUpDto;
 import com.minjae.my_backend.service.UserService;
 import jakarta.validation.Valid;
@@ -18,5 +19,10 @@ public class UserController {
     @PostMapping("/signup")
     public Long signUp(@Valid @RequestBody UserSignUpDto requestDto){
         return userService.signUp(requestDto);
+    }
+
+    @PostMapping("/login")
+    public String login(@RequestBody UserLoginRequestDto requestDto){
+        return userService.login(requestDto);
     }
 }
