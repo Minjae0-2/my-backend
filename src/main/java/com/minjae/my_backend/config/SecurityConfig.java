@@ -34,6 +34,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/users/signup","/api/users/login").permitAll()
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN") //admin 전용 ROLE_ADMIN만 통과.(자동으로 ROLE_붙여서 security가 검사함)
                         .anyRequest().authenticated()
                 )
                 //필터 추가하기

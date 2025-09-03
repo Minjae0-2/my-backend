@@ -1,5 +1,6 @@
 package com.minjae.my_backend.service;
 
+import com.minjae.my_backend.domain.Role;
 import com.minjae.my_backend.domain.User;
 import com.minjae.my_backend.domain.UserRepository;
 import com.minjae.my_backend.dto.UserLoginRequestDto;
@@ -9,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +32,7 @@ public class UserService {
                 .email(requestDto.getEmail())
                 .password(encodedPassword)
                 .username(requestDto.getUsername())
+                .role(Role.USER)
                 .build();
 
         User savedUser = userRepository.save(newUser);
@@ -46,5 +50,11 @@ public class UserService {
         }
 
         return jwtUtil.createToken(user.getEmail());
+    }
+
+    //관리자 전용
+    @Transactional(readOnly = true)
+    public List<User> findAllUsers(){
+        return userRepository.findAll();
     }
 }

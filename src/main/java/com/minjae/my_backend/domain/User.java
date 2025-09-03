@@ -22,18 +22,24 @@ public class User extends BaseTimeEntity{
     @Column(nullable = false)
     private String username;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
+
     @Builder
-    public User(String email, String password, String username){
+    public User(String email, String password, String username, Role role){
         this.email = email;
         this.password = password;
         this.username = username;
+        this.role = role;
     }
 
     @Builder(builderClassName = "TestBuilder" ,builderMethodName = "testBuilder")
-    public User(Long id, String email, String password, String username){
+    public User(Long id, String email, String password, String username, Role role){
         this.id = id;
         this.email = email;
         this.password = password;
         this.username = username;
+        this.role = role;
     }
 }
