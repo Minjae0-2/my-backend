@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter //DTO에서 사용. 데이터 꺼내기위해
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User {
+public class User extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,6 +24,14 @@ public class User {
 
     @Builder
     public User(String email, String password, String username){
+        this.email = email;
+        this.password = password;
+        this.username = username;
+    }
+
+    @Builder(builderClassName = "TestBuilder" ,builderMethodName = "testBuilder")
+    public User(Long id, String email, String password, String username){
+        this.id = id;
         this.email = email;
         this.password = password;
         this.username = username;

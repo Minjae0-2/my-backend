@@ -35,6 +35,15 @@ public class Post extends BaseTimeEntity{
         this.user = user;
     }
 
+    //Test를 위한 빌더(id 필드 포함)
+    @Builder(builderClassName = "TestBuilder", builderMethodName = "testBuilder")
+    public Post(Long id, String title, String content, User user){
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.user = user;
+    }
+
     public void update(String title, String content){
         this.title = title;
         this.content = content;
