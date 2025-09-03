@@ -19,4 +19,14 @@ public class GlobalExceptionHandler {
                 .build();
         return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
     }
+    //IllegalStateException 예외 처리
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ErrorResponseDto> handlerIllegalStateExceptionHandler(IllegalStateException ex){
+        ErrorResponseDto response = ErrorResponseDto.builder()
+                .status(HttpStatus.FORBIDDEN.value())
+                .error(HttpStatus.FORBIDDEN.getReasonPhrase())
+                .message(ex.getMessage())
+                .build();
+        return new ResponseEntity<>(response,HttpStatus.FORBIDDEN);
+    }
 }

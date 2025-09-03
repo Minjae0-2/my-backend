@@ -5,10 +5,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter //PostResponseDto에서 사용. Post entity에서 데이터 읽어서 DTO로 변환 위해
@@ -26,15 +22,26 @@ public class Post extends BaseTimeEntity{
     @Column(columnDefinition = "TEXT", nullable=false )
     private String content;
 
-    private String author;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id",nullable = false)
+    private User user;
 
     //Service에서 프론트에서 데이터 받아오면 DB에 저장하기 위해
     //객체 생성할때 무조건 Builder 이용해서 생성해야함
     @Builder
-    public Post(String title, String content, String author){
+    public Post(String title, String content, User user){
         this.title = title;
         this.content = content;
-        this.author = author;
+        this.user = user;
+    }
+
+    //Test를 위한 빌더(id 필드 포함)
+    @Builder(builderClassName = "TestBuilder", builderMethodName = "testBuilder")
+    public Post(Long id, String title, String content, User user){
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.user = user;
     }
 
     public void update(String title, String content){
