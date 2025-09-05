@@ -8,6 +8,8 @@ import com.minjae.my_backend.dto.PostCreateRequestDto;
 import com.minjae.my_backend.dto.PostResponseDto;
 import com.minjae.my_backend.dto.PostUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -40,11 +42,9 @@ public class PostService {
 
     //게시물 여러개 조회
     @Transactional(readOnly = true)
-    public List<PostResponseDto> findAll(){
-        List<Post> postList = postRepository.findAll();
-        return postList.stream()
-                .map(PostResponseDto::from)
-                .collect(Collectors.toList());
+    public Page<PostResponseDto> findAll(Pageable pageable){
+        Page<Post> postPage = postRepository.findAll(pageable);
+        return postPage.map(PostResponseDto::from);
     }
 
     //게시물 1개 조회
@@ -84,6 +84,25 @@ public class PostService {
         }
         postRepository.delete(post);
 
+    }
+
+    //게시물 여러개 삭제
+    @Transactional
+    public void deletePosts(List<Long> ids){
+        User currentUser = getCurrentUser();
+
+        //조회를 우선적으로 함(권한이 있는지 없는지를 위해)
+        List<Post> postsToDelete= postRepository.findAllById(ids);
+
+        //조회된 각 게시글 권한 확인
+        for(Post post: postsToDelete){
+            //하나라도 틀리면 에러
+            if (!post.getUser().getId().equals(currentUser.getId())) {
+                throw new IllegalStateException("선택한 게시글 중 삭제할 권한이 없는 게시글이 포함되어 있습니다.");
+            }
+        }
+        //일괄 삭제
+        postRepository.deleteAllInBatch(postsToDelete);
     }
 
     //JWT 필터에서 SecurityContext에 저장한 User 객체 꺼내오는 메소드

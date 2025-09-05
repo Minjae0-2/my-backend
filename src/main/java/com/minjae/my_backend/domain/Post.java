@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter //PostResponseDto에서 사용. Post entity에서 데이터 읽어서 DTO로 변환 위해
 @NoArgsConstructor(access= AccessLevel.PROTECTED) //Protected인 이유는 JPA가 이 객체를 상속하는 proxy 객체를 생성하기 때문 (lazy loading)
@@ -25,6 +28,10 @@ public class Post extends BaseTimeEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",nullable = false)
     private User user;
+
+    //외래키X, comment 엔티티의 post가 관리// orphanremoval은 Post 객체에서 .remove(commentId)로 나온 고아 댓글 자동 삭제 - 지금 코드에선 보험 Comment에서 .delete 쓸거임
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 
     //Service에서 프론트에서 데이터 받아오면 DB에 저장하기 위해
     //객체 생성할때 무조건 Builder 이용해서 생성해야함
