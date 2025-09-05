@@ -3,6 +3,7 @@ package com.minjae.my_backend.service;
 import com.minjae.my_backend.domain.*;
 import com.minjae.my_backend.dto.CommentCreateRequestDto;
 import com.minjae.my_backend.dto.CommentResponseDto;
+import com.minjae.my_backend.dto.CommentUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -50,6 +51,36 @@ public class CommentService {
                 .map(CommentResponseDto :: from)
                 .collect(Collectors.toList());
     }
+
+    //댓글 수정
+    @Transactional
+    public Long updateComment(Long commentId, CommentUpdateRequestDto requestDto){
+        User currentUser = getCurrentUser();
+        //해당 댓글 조회
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(()->new IllegalArgumentException("해당 댓글이 없습니다. id="+commentId));
+        //권한 확인
+        if(!comment.getUser().getId().equals(currentUser.getId())){
+            throw new IllegalStateException("댓글을 수정할 권한이 없습니다.");
+        }
+        comment.update(requestDto.getContent());
+        return commentId;
+    }
+
+    //댓글 삭제
+    @Transactional
+    public void deleteComment(Long commentId){
+        User currentUser = getCurrentUser();
+        //삭제할 댓글 조회
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(()->new IllegalArgumentException("해당 댓글이 없습니다. id="+ commentId));
+        //권한 확인
+        if(!comment.getUser().getId().equals(currentUser.getId())){
+            throw new IllegalStateException("댓글을 삭제할 권한이 없습니다.");
+        }
+        commentRepository.delete(comment);
+    }
+
 
     private User getCurrentUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
