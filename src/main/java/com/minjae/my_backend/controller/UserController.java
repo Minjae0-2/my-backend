@@ -5,6 +5,8 @@ import com.minjae.my_backend.dto.UserSignUpDto;
 import com.minjae.my_backend.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,12 +19,15 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public Long signUp(@Valid @RequestBody UserSignUpDto requestDto){
-        return userService.signUp(requestDto);
+    public ResponseEntity<Long> signUp(@Valid @RequestBody UserSignUpDto requestDto){
+        //201 Created 반환
+        Long userId = userService.signUp(requestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(userId);
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody UserLoginRequestDto requestDto){
-        return userService.login(requestDto);
+    public ResponseEntity<String> login(@RequestBody UserLoginRequestDto requestDto){
+        String token = userService.login(requestDto);
+        return ResponseEntity.ok(token);
     }
 }

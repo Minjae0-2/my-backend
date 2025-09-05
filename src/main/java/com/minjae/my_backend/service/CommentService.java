@@ -38,7 +38,7 @@ public class CommentService {
 
     //게시글의 댓글 전체 읽기
     @Transactional(readOnly = true)
-    public List<CommentResponseDto> readComments(Long postId){
+    public List<CommentResponseDto> getComments(Long postId){
         //해당 게시글이 존재하는지 확인
         Post post = postRepository.findById(postId)
                 .orElseThrow(()->new IllegalArgumentException("댓글을 조회할 게시글이 없습니다. id="+ postId));

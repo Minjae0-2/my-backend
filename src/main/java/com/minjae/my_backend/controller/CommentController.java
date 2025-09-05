@@ -6,6 +6,7 @@ import com.minjae.my_backend.service.CommentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,13 +23,13 @@ public class CommentController {
     @PostMapping
     public ResponseEntity<Long> createComment(@PathVariable Long postId, @RequestBody CommentCreateRequestDto requestDto){
         Long createdCommentID = commentService.createComment(requestDto,postId);
-        return ResponseEntity.ok(createdCommentID);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdCommentID);
     }
 
     @Operation(summary = "특정 게시글의 모든 댓글 조회", description = "특정 게시글에 달린 모든 댓글을 조회합니다.")
     @GetMapping
-    public ResponseEntity<List<CommentResponseDto>> readComments(@PathVariable Long postId){
-        List<CommentResponseDto> comments = commentService.readComments(postId);
+    public ResponseEntity<List<CommentResponseDto>> getComments(@PathVariable Long postId){
+        List<CommentResponseDto> comments = commentService.getComments(postId);
         return ResponseEntity.ok(comments);
     }
 }

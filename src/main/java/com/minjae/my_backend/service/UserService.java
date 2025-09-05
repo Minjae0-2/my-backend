@@ -4,9 +4,12 @@ import com.minjae.my_backend.domain.Role;
 import com.minjae.my_backend.domain.User;
 import com.minjae.my_backend.domain.UserRepository;
 import com.minjae.my_backend.dto.UserLoginRequestDto;
+import com.minjae.my_backend.dto.UserResponseDto;
 import com.minjae.my_backend.dto.UserSignUpDto;
 import com.minjae.my_backend.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,7 +57,8 @@ public class UserService {
 
     //관리자 전용
     @Transactional(readOnly = true)
-    public List<User> findAllUsers(){
-        return userRepository.findAll();
+    public Page<UserResponseDto> findAllUsers(Pageable pageable){
+        Page<User> users = userRepository.findAll(pageable);
+        return users.map(UserResponseDto::from);
     }
 }
