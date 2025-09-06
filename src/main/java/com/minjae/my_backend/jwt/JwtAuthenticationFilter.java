@@ -4,6 +4,7 @@ import com.minjae.my_backend.domain.User;
 import com.minjae.my_backend.domain.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +24,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String header = request.getHeader("Authorization"); //`Authorization:` 헤더를 찾고 그 다음 문자열들 저장
         String token = null;
+        Cookie[] cookies = request.getCookies();
 
-        if(header != null && header.startsWith("Bearer ")){ //Authorization:Bearer <token>
-            token= header.substring(7); //인덱스 7부터 토큰 시작-> 문자열 잘라냄
+        //쿠키 배열에서 authToken을 가진 쿠키 찾기
+        if(cookies != null) {
+            for(Cookie cookie: cookies){
+                if(cookie.getName().equals("authToken")){
+                    token=cookie.getValue();
+                    break;
+                }
+            }
         }
 
         //토큰이 존재하고 유효한 경우
